@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>网友酱油分享jquery放大镜特效</title>
+    <style type="text/css">
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+        .magnify {
+            width: 200px;
+            margin: 80px auto;
+            position: relative;
+        }
+        /* 在这里我们来设置放大镜的样式 */
+        
+        .large {
+            width: 180px;
+            height: 180px;
+            position: absolute;
+            /* 圆角 */
+            border-radius: 100%;
+            /* 这里使用多重阴影、来实现玻璃的效果 */
+            box-shadow: 0 0 0 7px rgba(255, 255, 255, 0.8), 0 0 7px 7px rgba(0, 0, 0, 0.3), inset 0 0 40px 2px rgba(0, 0, 0, 0.3);
+            /* 加载放大镜的图片 */
+            background: url(iphone.jpg) no-repeat;
+            /* 放大镜默认隐藏 */
+            display: none;
+        }
+        /* 解决放大镜在放大的过程中边缘重叠的BUG */
+        
+        .small {
+            display: block;
+        }
+    </style>
+
+    <script type="text/javascript" src='Jquery.js'></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var native_width = 0;
+            var native_height = 0;
+            $('.small').load(function() {
+                var img_obj = new Image();
+                img_obj.src = $(this).attr('src');
+
+                native_width = img_obj.width;
+                native_height = img_obj.height;
+
+
+                $('.magnify').mousemove(function(e) {
+
+                    var magnify_offset = $(this).offset();
+
+
+                    var mouse_x = e.pageX - magnify_offset.left;
+                    var mouse_y = e.pageY - magnify_offset.top;
+
+
+                    if (mouse_x > 0 && mouse_y > 0 && mouse_x < $(this).width() && mouse_y < $(this).height()) {
+                        $('.large').fadeIn(100);
+                    } else {
+                        $('.large').fadeOut(100);
+                    }
+                    if ($('.large').is(':visible')) {
+
+                        var rx = Math.round(mouse_x / $('.small').width() * native_width - $('.large').width() / 2) * -1;
+                        var ry = Math.round(mouse_y / $('.small').height() * native_height - $('.large').height() / 2) * -1;
+                        var bgp = rx + 'px ' + ry + 'px';
+                        var gx = mouse_x - $('.large').width() / 2;
+                        var gy = mouse_y - $('.large').height() / 2;
+                        $('.large').css({
+                            'left': gx,
+                            'top': gy,
+                            'backgroundPosition': bgp
+                        })
+                    }
+                })
+            })
+
+        })
+    </script>
+</head>
+
+<body>
+    <div class='magnify'>
+
+        <div class='large'></div>
+        <img src='iphone.jpg' width='200px' class='small'>
+    </div>
+
+</body>
+
+</html>
